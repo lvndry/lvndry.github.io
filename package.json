@@ -1,0 +1,21 @@
+{
+  "name": "lvndry-github-io",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch-data": "bun run scripts/fetch-data.ts",
+    "dev": "astro dev",
+    "build": "astro build",
+    "check": "astro check",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.5",
+    "astro": "^7.4.12"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/bun": "^1.4.4",
+    "typescript": "6"
+  }
+}
