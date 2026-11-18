@@ -5,6 +5,7 @@ import { BOOK, CONTACT_EMAIL, GITHUB_USER, PRODUCTS, REPOS, SITE_ORIGIN } from "
 import activityJson from "../data/activity.json";
 import type { ActivityData } from "../data/types";
 import type { DashboardData } from "../scripts/dashboard";
+import { OG_HEIGHT, OG_WIDTH } from "../lib/og";
 import { buildSeries, seriesForRepo, busiestDay, changelog, currentStreak, formatDate, formatNumber, plainSubject, total, yearTotals } from "../lib/stats";
 
 const data = activityJson as ActivityData;
@@ -41,6 +42,8 @@ const dashboard: DashboardData = {
 
 const DEFAULT_RANGE = "1Y";
 const title = "lvndry · I ship products I care about";
+const ogImage = `${SITE_ORIGIN}/og.png`;
+const ogAlt = `I ship products I care about. ${streak} days in a row shipping, ${formatNumber(allTime)} contributions since ${firstYear}.`;
 const description = `Software engineer in Paris. ${products.length} products live, ${formatNumber(allTime)} contributions since ${firstYear}, and a ${streak}-day streak.`;
 ---
 <!doctype html>
@@ -56,7 +59,17 @@ const description = `Software engineer in Paris. ${products.length} products liv
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={`${SITE_ORIGIN}/`} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:site_name" content="lvndry" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content={String(OG_WIDTH)} />
+    <meta property="og:image:height" content={String(OG_HEIGHT)} />
+    <meta property="og:image:alt" content={ogAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogAlt} />
     <meta name="theme-color" content="#0A0A0B" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
