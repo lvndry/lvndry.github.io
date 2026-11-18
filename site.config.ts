@@ -39,7 +39,6 @@ export const REPOS: RepoConfig[] = [
   },
   { id: "tizen-tap", name: "tizen-tap", hue: "#F78C6C" },
   { id: "tv-dashboard", name: "tv-dashboard", hue: "#C792EA" },
-  { id: "smets", name: "smets", hue: "#E0B21C" },
   { id: "ps5-firmware-pin", name: "ps5-firmware-pin", hue: "#82AAFF" },
 ];
 
