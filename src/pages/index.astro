@@ -39,6 +39,7 @@ const dashboard: DashboardData = {
   repos: repoList.map(({ id, name, hue, firstCommit, commitCount, daily }) => ({ id, name, hue, firstCommit, commitCount, daily })),
 };
 
+const DEFAULT_RANGE = "1Y";
 const title = "lvndry · I ship products I care about";
 const description = `Software engineer in Paris. ${products.length} products live, ${formatNumber(allTime)} contributions since ${firstYear}, and a ${streak}-day streak.`;
 ---
@@ -81,13 +82,13 @@ const description = `Software engineer in Paris. ${products.length} products liv
           <div class="app" data-dashboard>
             <aside>
               <h4>Repos <span data-range-label>· last 1Y</span></h4>
-              <button class="repo-btn" type="button" data-repo="all" style="--hue:#3DDC97"><i></i><span>All repos</span><em>{formatNumber(total(series.slice(-365)))}</em></button>
+              <button class="repo-btn on" type="button" data-repo="all" style="--hue:#3DDC97"><i></i><span>All repos</span><em>{formatNumber(total(series.slice(-365)))}</em></button>
               {sidebar.map((entry) => <button class="repo-btn" type="button" data-repo={entry.id} style={`--hue:${entry.hue}`}><i></i><span>{entry.name}</span><em>{formatNumber(total(seriesForRepo(series.slice(-365), entry.daily)))}</em></button>)}
             </aside>
             <div class="main">
               <div class="top">
                 <div><div class="value" data-value>{formatNumber(total(series.slice(-365)))}</div><div class="what" data-what>contributions in the last year</div><div class="delta" data-delta></div></div>
-                <div class="seg">{["7D", "1M", "6M", "1Y", "YOY", "MAX"].map((range) => <button type="button" data-range={range}>{range}</button>)}</div>
+                <div class="seg">{["7D", "1M", "6M", "1Y", "YOY", "MAX"].map((range) => <button type="button" data-range={range} class:list={[{ on: range === DEFAULT_RANGE }]}>{range}</button>)}</div>
               </div>
               <div class="chart"><svg data-chart viewBox="0 0 800 300" role="img" aria-label="Contributions over time"></svg><div class="tip" data-tip></div></div>
             </div>
