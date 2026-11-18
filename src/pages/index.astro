@@ -103,8 +103,7 @@ const description = `Software engineer in Paris. ${products.length} products liv
 
       <section class="block wrap" id="products">
         <p class="eyebrow">Products</p>
-        <h2>Things I built because I wanted them to exist. <span>All of them are live.</span></h2>
-        <p class="lede">Open source where it can be. Each card opens the product.</p>
+        <h2 class="spaced">Things I built because I wanted them to exist.</h2>
         <div class="bento">
           <a class="tile reveal t-euphoria" href={linkFor("euphoria")} style={`--hue:${repo("euphoria").hue}`}>
             <div class="text"><div class="name"><img src={repo("euphoria").logo} alt="" class="logo-euphoria" />Euphoria</div><p>{repo("euphoria").description}</p><div class="meta"><span><b>{formatNumber(repo("euphoria").commitCount)}</b> commits</span><span>{repo("euphoria").language}</span><span><b>{repo("euphoria").stars}★</b></span></div></div>
