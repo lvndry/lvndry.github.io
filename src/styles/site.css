@@ -141,3 +141,5 @@ footer a:hover { color: var(--fg); }
 @media (prefers-reduced-motion: reduce) { .reveal { transition: none; } .badge .pulse::after { animation: none; } html { scroll-behavior: auto; } }
 .logo-euphoria { background: #7C6CF0; padding: 3px; }
 img[src$="one-dollar-digest.png"] { background: #fff; padding: 3px; }
+.repo-btn.quiet:not(.on) { opacity: .45; }
+.app aside h4 span { color: var(--soft); }

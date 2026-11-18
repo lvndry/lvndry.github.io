@@ -63,8 +63,29 @@ function mount(root: HTMLElement, data: DashboardData): void {
     return `<b class="${percent < 0 ? "down" : ""}">${percent >= 0 ? "+" : ""}${formatNumber(percent)}%</b> vs ${label}`;
   }
 
+  const rangeLabel = root.querySelector<HTMLElement>("[data-range-label]");
+  const thisYear = series[series.length - 1]![0].slice(0, 4);
+
+  function rangeCount(repo: string, range: string): number {
+    const days = daysFor(repo);
+    if (range === "MAX") return total(days);
+    if (range === "YOY") return total(days.filter(([date]) => date.startsWith(thisYear)));
+    return total(days.slice(-RANGES[range]!));
+  }
+
+  function updateSidebar(range: string): void {
+    if (rangeLabel) rangeLabel.textContent = range === "MAX" ? "· all time" : range === "YOY" ? `· in ${thisYear}` : `· last ${range}`;
+    root.querySelectorAll<HTMLElement>("aside [data-repo]").forEach((button) => {
+      const count = rangeCount(button.dataset.repo!, range);
+      const counter = button.querySelector("em");
+      if (counter) counter.textContent = formatNumber(count);
+      button.classList.toggle("quiet", count === 0);
+    });
+  }
+
   function draw(): void {
     const { repo, range } = state;
+    updateSidebar(range);
     const hue = hueOf(repo);
     const days = daysFor(repo);
     const unit = repo === ALL ? "contributions" : `commits to ${repoById.get(repo)!.name}`;
@@ -103,7 +124,10 @@ function mount(root: HTMLElement, data: DashboardData): void {
       bucket = sinceFirst.length > 900 ? 30 : sinceFirst.length > 150 ? 7 : 1;
       window = [];
       for (let index = 0; index < sinceFirst.length; index += bucket) window.push([sinceFirst[index]![0], total(sinceFirst.slice(index, index + bucket))]);
-      headline(total(sinceFirst), `${unit} since ${formatDate(firstDayOf(repo))}`, `${formatNumber(sinceFirst.length)} days, first commit to today`);
+      const busiest = window.reduce((best, entry) => (entry[1] > best[1] ? entry : best), window[0]!);
+      const bucketName = bucket === 30 ? "30 days" : bucket === 7 ? "week" : "day";
+      const busiestWhen = bucket === 30 ? `from ${formatDate(busiest[0])}` : bucket === 7 ? `week of ${formatDate(busiest[0])}` : formatDate(busiest[0]);
+      headline(total(sinceFirst), `${unit} since ${formatDate(firstDayOf(repo))}`, `busiest ${bucketName}: <b>${formatNumber(busiest[1])}</b>, ${busiestWhen}`);
     } else {
       const length = RANGES[range]!;
       window = days.slice(-length);
