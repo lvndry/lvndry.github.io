@@ -4,7 +4,7 @@ The site at [lvndry.github.io](https://lvndry.github.io/): the products I've shi
 
 ## How it works
 
-`scripts/fetch-data.ts` reads my contribution calendar since 2016, the commits and details of the repos in `site.config.ts`, and writes them to `src/data/activity.json`. Astro builds the page from that file. The dashboard at the top is the only part that needs JavaScript.
+`scripts/fetch-data.ts` reads my contribution calendar since 2016, the commits and details of the repos in `site.config.ts`, and writes them to `src/data/activity.json`. Astro builds the page from that file, and draws the social preview image (`/og.png`, with the streak and the last year of contributions) from the same data. The dashboard at the top is the only part that needs JavaScript.
 
 The `Site` workflow fetches the data, builds and type-checks on every pull request, and on master it also deploys to GitHub Pages: on every push, every hour, and on demand.
 

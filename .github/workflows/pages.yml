@@ -37,6 +37,10 @@ jobs:
         run: bun run build
       - name: Type-check
         run: bun run check
+      - name: Check the social image
+        run: |
+          test -f dist/og.png
+          grep -q '<meta property="og:image" content="https://lvndry.github.io/og.png">' dist/index.html
       - name: Configure Pages
         if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
         uses: actions/configure-pages@v6
