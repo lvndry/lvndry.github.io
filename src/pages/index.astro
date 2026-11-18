@@ -1,0 +1,180 @@
+---
+import "../styles/site.css";
+
+import { BOOK, CONTACT_EMAIL, GITHUB_USER, PRODUCTS, REPOS, SITE_ORIGIN } from "../../site.config";
+import activityJson from "../data/activity.json";
+import type { ActivityData } from "../data/types";
+import type { DashboardData } from "../scripts/dashboard";
+import { buildSeries, busiestDay, changelog, currentStreak, formatDate, formatNumber, plainSubject, total, yearTotals } from "../lib/stats";
+
+const data = activityJson as ActivityData;
+const series = buildSeries(data.calendar);
+const allTime = total(series);
+const streak = currentStreak(series);
+const busiest = busiestDay(series);
+const years = yearTotals(series);
+const [firstYear, firstYearTotal] = years[0]!;
+const [thisYear, thisYearTotal] = years[years.length - 1]!;
+const peakHour = data.facts.hours.indexOf(Math.max(...data.facts.hours));
+const repoList = REPOS.map((config) => data.repos[config.id]!).filter(Boolean);
+const sidebar = [...repoList].sort((first, second) => second.commitCount - first.commitCount);
+const products = PRODUCTS.map((id) => data.repos[id]!);
+const repo = (id: string) => data.repos[id]!;
+const linkFor = (id: string) => repo(id).homepage ?? `https://github.com/${GITHUB_USER}/${id}`;
+const userSince = formatDate(data.user.createdAt, { month: "long", year: "numeric" });
+const recentDays = series.slice(-40);
+const busiestInMonth = series.slice(-30);
+const busiestIndex = busiestInMonth.findIndex(([date]) => date === busiest[0]);
+const log = changelog(data, REPOS.map((config) => config.id), 4, 5);
+
+const bars = (values: number[], highlight: number) => {
+  const peak = Math.max(...values, 1);
+  const slot = 200 / values.length;
+  return values.map((value, index) => ({ left: index * slot + 1, top: 64 - (value / peak) * 62, width: slot - 2, height: (value / peak) * 62, on: index === highlight }));
+};
+
+const dashboard: DashboardData = {
+  calendar: data.calendar,
+  firstDay: data.user.createdAt.slice(0, 10),
+  repos: repoList.map(({ id, name, hue, firstCommit, commitCount, daily }) => ({ id, name, hue, firstCommit, commitCount, daily })),
+};
+
+const title = "lvndry · I ship products I care about";
+const description = `Software engineer in Paris. ${products.length} products live, ${formatNumber(allTime)} contributions since ${firstYear}, and a ${streak}-day streak.`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={`${SITE_ORIGIN}/`} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={`${SITE_ORIGIN}/`} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#0A0A0B" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" />
+  </head>
+  <body>
+    <a class="skip" href="#products">Skip to the products</a>
+    <nav class="top"><div class="wrap">
+      <a class="brand" href="#top"><svg viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="7" fill="#EDEDEF" /><path d="M8 7v12h10" stroke="#0A0A0B" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg>lvndry</a>
+      <div class="links"><a href="#products">Products</a><a href="#numbers">Numbers</a><a href="#changelog">Changelog</a><a href="#book">Book</a></div>
+      <a class="btn ghost" href={`https://github.com/${GITHUB_USER}`}>GitHub</a>
+      <a class="btn primary" href={`mailto:${CONTACT_EMAIL}`}>Get in touch</a>
+    </div></nav>
+
+    <main id="top">
+      <header class="hero wrap">
+        <a class="badge" href="#numbers"><span class="pulse"></span><span><b>{formatNumber(streak)}</b> days in a row shipping</span><span aria-hidden="true">→</span></a>
+        <h1>I ship products <span>I care about.</span></h1>
+        <p class="sub">Software engineer in Paris. {products.length} products live, {formatNumber(allTime)} contributions since {firstYear}, and something new almost every day.</p>
+        <div class="ctas"><a class="btn primary lg" href="#products">See the products</a><a class="btn ghost lg" href={`https://github.com/${GITHUB_USER}`}>github.com/{GITHUB_USER}</a></div>
+        <div class="shot">
+          <div class="chrome"><i></i><i></i><i></i><span class="url">lvndry.github.io/activity</span></div>
+          <div class="app" data-dashboard>
+            <aside>
+              <h4>Repos</h4>
+              <button class="repo-btn" type="button" data-repo="all" style="--hue:#3DDC97"><i></i><span>All repos</span><em>{formatNumber(allTime)}</em></button>
+              {sidebar.map((entry) => <button class="repo-btn" type="button" data-repo={entry.id} style={`--hue:${entry.hue}`}><i></i><span>{entry.name}</span><em>{formatNumber(entry.commitCount)}</em></button>)}
+            </aside>
+            <div class="main">
+              <div class="top">
+                <div><div class="value" data-value>{formatNumber(total(series.slice(-365)))}</div><div class="what" data-what>contributions in the last year</div><div class="delta" data-delta></div></div>
+                <div class="seg">{["7D", "1M", "6M", "1Y", "YOY", "MAX"].map((range) => <button type="button" data-range={range}>{range}</button>)}</div>
+              </div>
+              <div class="chart"><svg data-chart viewBox="0 0 800 300" role="img" aria-label="Contributions over time"></svg><div class="tip" data-tip></div></div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="logos wrap">
+        <p>Products I've shipped</p>
+        <div class="row">{products.map((product) => <a href={linkFor(product.id)}>{product.logo && <img src={product.logo} alt="" width="26" height="26" class={`logo-${product.id}`} />}{product.name}</a>)}</div>
+      </div>
+
+      <section class="block wrap" id="products">
+        <p class="eyebrow">Products</p>
+        <h2>Things I built because I wanted them to exist. <span>All of them are live.</span></h2>
+        <p class="lede">Open source where it can be. Each card opens the product.</p>
+        <div class="bento">
+          <a class="tile reveal t-euphoria" href={linkFor("euphoria")} style={`--hue:${repo("euphoria").hue}`}>
+            <div class="text"><div class="name"><img src={repo("euphoria").logo} alt="" class="logo-euphoria" />Euphoria</div><p>{repo("euphoria").description}</p><div class="meta"><span><b>{formatNumber(repo("euphoria").commitCount)}</b> commits</span><span>{repo("euphoria").language}</span><span><b>{repo("euphoria").stars}★</b></span></div></div>
+            <div class="visual"><img src="/images/euphoria.webp" alt="Euphoria's library: every track with its key, tempo and energy." loading="lazy" /></div>
+          </a>
+          <a class="tile reveal t-jazz" href={linkFor("jazz")} style={`--hue:${repo("jazz").hue}`}>
+            <div class="text"><div class="name"><img src={repo("jazz").logo} alt="" />Jazz</div><p>An agent harness: one agent that runs in your terminal, scripts, schedules and chat bots, with the same tools and memory.</p><div class="meta"><span>{repo("jazz").language}</span>{repo("jazz").latestRelease && <span>{repo("jazz").latestRelease}</span>}</div></div>
+            <div class="visual"><pre class="term"><span class="p">$</span> <span class="w">npm i -g jazz-ai@latest</span>{"\n"}<span class="p">$</span> <span class="w">jazz</span>{"\n"}One agent. Every surface. Your rules.</pre><div class="big-stat" style="padding-top:22px">{repo("jazz").stars}★<small>{repo("jazz").forks} forks · {formatNumber(repo("jazz").commitCount)} commits</small></div></div>
+          </a>
+          <a class="tile reveal t-third" href={linkFor("drone")} style={`--hue:${repo("drone").hue}`}>
+            <div class="text"><div class="name"><img src={repo("drone").logo} alt="" />drone</div><p>{repo("drone").description}</p><div class="meta"><span><b>{repo("drone").commitCount}</b> commits</span><span>{repo("drone").language}</span></div></div>
+            <div class="visual"><div class="bars"><div><span>libkeyfinder</span><i style={`width:${(69.35 / 80) * 100}%`}></i><b>69.4%</b></div><div class="ours"><span>drone</span><i style={`width:${(73.58 / 80) * 100}%`}></i><b>73.6%</b></div></div></div>
+          </a>
+          <a class="tile reveal t-third" href={linkFor("clausea")} style={`--hue:${repo("clausea").hue}`}>
+            <div class="text"><div class="name"><img src={repo("clausea").logo} alt="" />Clausea</div><p>{repo("clausea").description}</p><div class="meta"><span><b>{repo("clausea").commitCount}</b> commits</span><span>{repo("clausea").language}</span></div></div>
+            <div class="visual"><div class="big-stat url">clausea.co<small>privacy policies and terms, in plain English</small></div></div>
+          </a>
+          <a class="tile reveal t-third" href={linkFor("one-dollar-digest")} style={`--hue:${repo("one-dollar-digest").hue}`}>
+            <div class="text"><div class="name"><img src={repo("one-dollar-digest").logo} alt="" />One Dollar Digest</div><p>{repo("one-dollar-digest").description}</p><div class="meta"><span><b>{repo("one-dollar-digest").commitCount}</b> commits</span><span>{repo("one-dollar-digest").language}</span></div></div>
+            <div class="visual"><div class="big-stat">$1<small>a month for a daily news digest, written by Jazz</small></div></div>
+          </a>
+          <a class="tile reveal t-wide" href={linkFor("tangent")} style={`--hue:${repo("tangent").hue}`}>
+            <div class="text"><div class="name"><img src={repo("tangent").logo} alt="" />Tangent</div><p>{repo("tangent").description}</p><div class="meta"><span><b>{repo("tangent").commitCount}</b> commits</span><span>{repo("tangent").language}</span></div></div>
+            <div class="visual"><div class="big-stat url">tangent-agency.com<small>independent AI and engineering advisory</small></div></div>
+          </a>
+          <a class="tile reveal t-wide" href={BOOK.url} style="--hue:#3DDC97">
+            <div class="text"><div class="name">{BOOK.title}</div><p>My book, {BOOK.year}. What helped me get hired, for whoever is where I was.</p><div class="meta"><span><b>free PDF</b></span><span>Amazon</span><span>Gumroad</span></div></div>
+            <div class="visual"><div class="book-cover">{BOOK.title}</div></div>
+          </a>
+        </div>
+      </section>
+
+      <section class="block wrap" id="numbers">
+        <p class="eyebrow">Numbers</p>
+        <h2>Shipping every day. <span>Literally.</span></h2>
+        <p class="lede">Straight from GitHub, refreshed every hour.</p>
+        <div class="metrics reveal">
+          <div class="metric"><b>{formatNumber(streak)}</b><span>days in a row with a contribution</span><div class="dots">{recentDays.map(([date, count]) => <i class={count ? "" : "off"} title={formatDate(date)}></i>)}</div></div>
+          <div class="metric"><b>{formatNumber(firstYearTotal)} → {formatNumber(thisYearTotal)}</b><span>contributions in {firstYear}, then in {thisYear} so far</span><svg viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true">{bars(years.map(([, value]) => value), years.length - 1).map((bar) => <rect x={bar.left} y={bar.top} width={bar.width} height={bar.height} rx="1.5" fill={bar.on ? "#3DDC97" : "#2E2E33"} />)}</svg></div>
+          <div class="metric"><b>{String(peakHour).padStart(2, "0")}:00</b><span>when most of my commits land, Paris time</span><svg viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true">{bars(data.facts.hours, peakHour).map((bar) => <rect x={bar.left} y={bar.top} width={bar.width} height={bar.height} rx="1.5" fill={bar.on ? "#3DDC97" : "#2E2E33"} />)}</svg></div>
+          <div class="metric"><b>{formatNumber(busiest[1])}</b><span>contributions on {formatDate(busiest[0])}, my busiest day</span><svg viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true">{bars(busiestInMonth.map(([, value]) => value), busiestIndex).map((bar) => <rect x={bar.left} y={bar.top} width={bar.width} height={bar.height} rx="1.5" fill={bar.on ? "#3DDC97" : "#2E2E33"} />)}</svg></div>
+        </div>
+      </section>
+
+      <section class="block wrap" id="changelog">
+        <p class="eyebrow">Changelog</p>
+        <h2>What shipped lately.</h2>
+        <p class="lede">The latest commits across my products, newest first.</p>
+        <div class="changelog reveal">
+          {log.map(([day, entries]) => (
+            <div class="day">
+              <div class="date">{formatDate(day, { weekday: "short", day: "numeric", month: "short" })}</div>
+              <ul>{entries.map((entry) => <li><a href={`https://github.com/${GITHUB_USER}/${entry.repo}`} style={`--hue:${repo(entry.repo).hue}`}>{repo(entry.repo).name}</a><span>{plainSubject(entry.subject)}</span></li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="wrap" id="book">
+        <div class="cta reveal">
+          <p class="eyebrow">The book</p>
+          <h2>{BOOK.title}.</h2>
+          <p>What helped me get hired at one of the best companies in the world. Free to read.</p>
+          <div class="ctas"><a class="btn primary lg" href={BOOK.url}>Read it free</a><a class="btn ghost lg" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></div>
+        </div>
+      </section>
+    </main>
+
+    <footer><div class="wrap"><span>lvndry · Paris · on GitHub since {userSince}</span><a href={`https://github.com/${GITHUB_USER}`}>GitHub</a><a href={`mailto:${CONTACT_EMAIL}`}>Email</a><span>Data updated {formatDate(data.today)}</span></div></footer>
+
+    <script type="application/json" id="dashboard-data" set:html={JSON.stringify(dashboard).replace(/</g, "\\u003c")}></script>
+    <script>import "../scripts/dashboard";</script>
+  </body>
+</html>
