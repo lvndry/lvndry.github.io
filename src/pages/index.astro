@@ -5,7 +5,7 @@ import { BOOK, CONTACT_EMAIL, GITHUB_USER, PRODUCTS, REPOS, SITE_ORIGIN } from "
 import activityJson from "../data/activity.json";
 import type { ActivityData } from "../data/types";
 import type { DashboardData } from "../scripts/dashboard";
-import { buildSeries, busiestDay, changelog, currentStreak, formatDate, formatNumber, plainSubject, total, yearTotals } from "../lib/stats";
+import { buildSeries, seriesForRepo, busiestDay, changelog, currentStreak, formatDate, formatNumber, plainSubject, total, yearTotals } from "../lib/stats";
 
 const data = activityJson as ActivityData;
 const series = buildSeries(data.calendar);
@@ -80,9 +80,9 @@ const description = `Software engineer in Paris. ${products.length} products liv
           <div class="chrome"><i></i><i></i><i></i><span class="url">lvndry.github.io/activity</span></div>
           <div class="app" data-dashboard>
             <aside>
-              <h4>Repos</h4>
-              <button class="repo-btn" type="button" data-repo="all" style="--hue:#3DDC97"><i></i><span>All repos</span><em>{formatNumber(allTime)}</em></button>
-              {sidebar.map((entry) => <button class="repo-btn" type="button" data-repo={entry.id} style={`--hue:${entry.hue}`}><i></i><span>{entry.name}</span><em>{formatNumber(entry.commitCount)}</em></button>)}
+              <h4>Repos <span data-range-label>· last 1Y</span></h4>
+              <button class="repo-btn" type="button" data-repo="all" style="--hue:#3DDC97"><i></i><span>All repos</span><em>{formatNumber(total(series.slice(-365)))}</em></button>
+              {sidebar.map((entry) => <button class="repo-btn" type="button" data-repo={entry.id} style={`--hue:${entry.hue}`}><i></i><span>{entry.name}</span><em>{formatNumber(total(seriesForRepo(series.slice(-365), entry.daily)))}</em></button>)}
             </aside>
             <div class="main">
               <div class="top">
