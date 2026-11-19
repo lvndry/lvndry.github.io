@@ -44,7 +44,7 @@ const DEFAULT_RANGE = "1Y";
 const title = "lvndry · I ship products I care about";
 const ogImage = `${SITE_ORIGIN}/og.png`;
 const ogAlt = `I ship products I care about. ${streak} days in a row shipping, ${formatNumber(allTime)} contributions since ${firstYear}.`;
-const description = `Software engineer in Paris. ${products.length} products live, ${formatNumber(allTime)} contributions since ${firstYear}, and a ${streak}-day streak.`;
+const description = `Software engineer in Paris. ${products.length} products, ${formatNumber(allTime)} contributions since ${firstYear}, and a ${streak}-day streak.`;
 ---
 <!doctype html>
 <html lang="en">
@@ -88,7 +88,7 @@ const description = `Software engineer in Paris. ${products.length} products liv
       <header class="hero wrap">
         <a class="badge" href="#numbers"><span class="pulse"></span><span><b>{formatNumber(streak)}</b> days in a row shipping</span><span aria-hidden="true">→</span></a>
         <h1>I ship products <span>I care about.</span></h1>
-        <p class="sub">Software engineer in Paris. {products.length} products live, {formatNumber(allTime)} contributions since {firstYear}, and something new almost every day.</p>
+        <p class="sub">Software engineer in Paris. {products.length} products, {formatNumber(allTime)} contributions since {firstYear}, and something new almost every day.</p>
         <div class="ctas"><a class="btn primary lg" href="#products">See the products</a><a class="btn ghost lg" href={`https://github.com/${GITHUB_USER}`}>github.com/{GITHUB_USER}</a></div>
         <div class="shot">
           <div class="chrome"><i></i><i></i><i></i><span class="url">lvndry.github.io/activity</span></div>
@@ -138,11 +138,15 @@ const description = `Software engineer in Paris. ${products.length} products liv
             <div class="text"><div class="name"><img src={repo("one-dollar-digest").logo} alt="" />One Dollar Digest</div><p>{repo("one-dollar-digest").description}</p><div class="meta"><span><b>{repo("one-dollar-digest").commitCount}</b> commits</span><span>{repo("one-dollar-digest").language}</span></div></div>
             <div class="visual"><div class="big-stat">$1<small>a month for a daily news digest, written by Jazz</small></div></div>
           </a>
-          <a class="tile reveal t-wide" href={linkFor("tangent")} style={`--hue:${repo("tangent").hue}`}>
+          <a class="tile reveal t-third" href={linkFor("quartet")} style={`--hue:${repo("quartet").hue}`}>
+            <div class="text"><div class="name"><img src={repo("quartet").logo} alt="" />Quartet</div><p>{repo("quartet").description}</p><div class="meta"><span><b>{repo("quartet").commitCount}</b> commits</span><span>{repo("quartet").language}</span><span>early</span></div></div>
+            <div class="visual"><div class="big-stat quote">Multi-agent conversations that wait for you.</div></div>
+          </a>
+          <a class="tile reveal t-third" href={linkFor("tangent")} style={`--hue:${repo("tangent").hue}`}>
             <div class="text"><div class="name"><img src={repo("tangent").logo} alt="" />Tangent</div><p>{repo("tangent").description}</p><div class="meta"><span><b>{repo("tangent").commitCount}</b> commits</span><span>{repo("tangent").language}</span></div></div>
             <div class="visual"><div class="big-stat url">tangent-agency.com<small>independent AI and engineering advisory</small></div></div>
           </a>
-          <a class="tile reveal t-wide" href={BOOK.url} style="--hue:#3DDC97">
+          <a class="tile reveal t-third" href={BOOK.url} style="--hue:#3DDC97">
             <div class="text"><div class="name">{BOOK.title}</div><p>My book, {BOOK.year}. What helped me get hired, for whoever is where I was.</p><div class="meta"><span><b>free PDF</b></span><span>Amazon</span><span>Gumroad</span></div></div>
             <div class="visual"><div class="book-cover">{BOOK.title}</div></div>
           </a>

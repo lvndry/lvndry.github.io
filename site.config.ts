@@ -37,12 +37,20 @@ export const REPOS: RepoConfig[] = [
     logo: "/logos/tangent.svg",
     description: "Website of Tangent Consulting, an independent AI and engineering advisory based in Paris.",
   },
+  {
+    id: "quartet",
+    name: "Quartet",
+    hue: "#E0533A",
+    logo: "/logos/quartet.svg",
+    description:
+      "Agents that each carry their own persona, knowledge, model and tools, taking turns in one room. You steer yours between turns.",
+  },
   { id: "tizen-tap", name: "tizen-tap", hue: "#F78C6C" },
   { id: "tv-dashboard", name: "tv-dashboard", hue: "#C792EA" },
   { id: "ps5-firmware-pin", name: "ps5-firmware-pin", hue: "#82AAFF" },
 ];
 
-export const PRODUCTS = ["jazz", "euphoria", "clausea", "one-dollar-digest", "drone", "tangent"] as const;
+export const PRODUCTS = ["jazz", "euphoria", "clausea", "one-dollar-digest", "drone", "quartet", "tangent"] as const;
 
 export const BOOK = {
   title: "How to Stand Out as a Software Engineer",
