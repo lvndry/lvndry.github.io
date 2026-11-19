@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Quartet">
+  <!--
+    Four voices, at four heights, on the app's own ink.
+
+    The mark is the VU meter the app already draws for a thinking agent — four bars because a
+    quartet is four, uneven because they are not interchangeable. One bar carries the
+    vermilion the wordmark puts on its full stop, so the icon and "Quartet." are the same
+    object. Reads at 16px, which is the only size that matters here.
+  -->
+  <rect width="32" height="32" rx="5" fill="#0e1419"/>
+  <rect x="3"  y="11" width="5" height="16" fill="#ece2d0"/>
+  <rect x="10" y="5"  width="5" height="22" fill="#e0533a"/>
+  <rect x="17" y="16" width="5" height="11" fill="#ece2d0"/>
+  <rect x="24" y="8"  width="5" height="19" fill="#ece2d0"/>
+</svg>
