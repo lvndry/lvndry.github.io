@@ -18,8 +18,11 @@ export function seriesForRepo(series: Day[], daily: Record<string, number>): Day
 export const total = (days: Day[]): number => days.reduce((sum, [, count]) => sum + count, 0);
 
 export function currentStreak(series: Day[]): number {
+  let last = series.length - 1;
+  // Today is not over, so a day with nothing yet does not end the streak.
+  if (series[last]?.[1] === 0) last--;
   let streak = 0;
-  for (let index = series.length - 1; index >= 0 && series[index]![1] > 0; index--) streak++;
+  for (let index = last; index >= 0 && series[index]![1] > 0; index--) streak++;
   return streak;
 }
 
