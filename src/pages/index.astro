@@ -126,6 +126,9 @@ const description = `Software engineer in Paris. ${products.length} products, ${
             <div class="text"><div class="name"><img src={repo("jazz").logo} alt="" />Jazz</div><p>An agent harness: one agent that runs in your terminal, scripts, schedules and chat bots, with the same tools and memory.</p><div class="meta"><span>{repo("jazz").language}</span>{repo("jazz").latestRelease && <span>{repo("jazz").latestRelease}</span>}</div></div>
             <div class="visual"><pre class="term"><span class="p">$</span> <span class="w">npm i -g jazz-ai@latest</span>{"\n"}<span class="p">$</span> <span class="w">jazz</span>{"\n"}One agent. Every surface. Your rules.</pre><div class="big-stat" style="padding-top:22px">{repo("jazz").stars}★<small>{repo("jazz").forks} forks · {formatNumber(repo("jazz").commitCount)} commits</small></div></div>
           </a>
+          <a class="tile reveal t-dubplate" href={linkFor("dubplate")} style={`--hue:${repo("dubplate").hue}`}>
+            <div class="text"><div class="name"><img src={repo("dubplate").logo} alt="" />Dubplate</div><p>{repo("dubplate").description}</p><div class="meta"><span><b>{formatNumber(repo("dubplate").commitCount)}</b> commits</span><span>{repo("dubplate").language}</span>{repo("dubplate").latestRelease && <span>{repo("dubplate").latestRelease}</span>}</div></div>
+          </a>
           <a class="tile reveal t-third" href={linkFor("drone")} style={`--hue:${repo("drone").hue}`}>
             <div class="text"><div class="name"><img src={repo("drone").logo} alt="" />drone</div><p>{repo("drone").description}</p><div class="meta"><span><b>{repo("drone").commitCount}</b> commits</span><span>{repo("drone").language}</span></div></div>
             <div class="visual"><div class="bars"><div><span>libkeyfinder</span><i style={`width:${(69.35 / 80) * 100}%`}></i><b>69.4%</b></div><div class="ours"><span>drone</span><i style={`width:${(73.58 / 80) * 100}%`}></i><b>73.6%</b></div></div></div>

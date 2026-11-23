@@ -15,6 +15,13 @@ export type RepoConfig = {
 export const REPOS: RepoConfig[] = [
   { id: "jazz", name: "Jazz", hue: "#00D7FF", logo: "/logos/jazz.svg" },
   { id: "euphoria", name: "Euphoria", hue: "#A78BFA", logo: "/logos/euphoria.svg" },
+  {
+    id: "dubplate",
+    name: "Dubplate",
+    hue: "#E5FC89",
+    logo: "/logos/dubplate.svg",
+    description: "Free, open-source DJ software for live two-deck mixing with a DDJ-FLX4 or keyboard. Play tracks from your own folders or bring in your rekordbox library.",
+  },
   { id: "clausea", name: "Clausea", hue: "#3DDC97", logo: "/logos/clausea.png" },
   {
     id: "one-dollar-digest",
@@ -50,7 +57,7 @@ export const REPOS: RepoConfig[] = [
   { id: "ps5-firmware-pin", name: "ps5-firmware-pin", hue: "#82AAFF" },
 ];
 
-export const PRODUCTS = ["jazz", "euphoria", "clausea", "one-dollar-digest", "drone", "quartet", "tangent"] as const;
+export const PRODUCTS = ["jazz", "euphoria", "dubplate", "clausea", "one-dollar-digest", "drone", "quartet", "tangent"] as const;
 
 export const BOOK = {
   title: "How to Stand Out as a Software Engineer",
